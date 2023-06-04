@@ -1,52 +1,81 @@
 var button = document.getElementById("enter");
 var input = document.getElementById("userinput");
 var ul = document.querySelector("ul");
-var liListed = [];
-var deleteButton = document.createElement("button");
-deleteButton.innerText="DELETE";
-var liIndex;
+var liLists = document.querySelectorAll("li");
 
 function inputLength() {
-    return input.value.length;
+	return input.value.length;
 }
 
+// START new list items //
+
 function createListElement() {
-    var li = document.createElement("li");
-        li.appendChild(document.createTextNode(input.value));
-        ul.appendChild(li);
-        input.value = "";
+	//Create New List//
+	var li = document.createElement("li");
+	li.appendChild(document.createTextNode(input.value));
+	ul.appendChild(li);
+	//Add toggle//
+	li.addEventListener("click",function(){
+		li.classList.toggle("done");
+	}) 
+	//Create delete button//
+	var deleteButton = document.createElement("button");
+        deleteButton.innerText="DELETE";
+		li.appendChild(deleteButton);
+	//Make delete button to work//
+		deleteButton.addEventListener("click", function(){
+		li.parentNode.removeChild(li);
+	// //Check all lists again after press delete//
+	// 	liLists = document.querySelectorAll("li");
+	// 	console.log(liLists);
+	})
+	// //Check all lists again after create new list//
+	// liLists = document.querySelectorAll("li");
+	// console.log(liLists);
+	//Clear input//
+	input.value = "";
 }
 
 function addListAfterClick() {
-    if (inputLength() > 0) {
-    createListElement()
-    }
-    checkliListed();
+	if (inputLength() > 0) {
+		createListElement();
+	}
 }
 
-function addListAfterKeyPress(event) {
-    if (inputLength() > 0 && (event.code === "Enter" ||event.code ==="NumpadEnter")) {
-        createListElement()
-    }
-    checkliListed();
+function addListAfterKeypress(event) {
+	if (inputLength() > 0 && event.keyCode === 13) {
+		createListElement();
+	}
+}
+// END new list items //
+
+// START existing list items //
+function addToggle(liLists, i){
+	liLists.addEventListener("click",function(){
+		liLists.classList.toggle("done");
+	}) 
 }
 
-function checkliListed(){
-    for (var i = 0; i<document.getElementsByTagName("li").length; i++){
-        liListed[i] = document.getElementsByTagName("li")[i]; 
-        liListed[i].addEventListener("click",toggleDone);
-        liIndex = i;
-    }    
+function addDeleteButton(liLists, i){
+	//Create delete button//
+    var deleteButton = document.createElement("button");
+        deleteButton.innerText="DELETE";
+        liLists.appendChild(deleteButton);
+	//Make delete button to work//
+		deleteButton.addEventListener("click", function(){
+		liLists.parentNode.removeChild(liLists);
+	// //Check all lists again//
+	// 	liLists = document.querySelectorAll("li");
+	// 	console.log(liLists);
+	})
 }
 
-function toggleDone(){
-    console.log("toggle Done" + liIndex);
+liLists.forEach(addToggle);
 
-}
+liLists.forEach(addDeleteButton);
 
-checkliListed();
-
+// END existing list items //
 
 button.addEventListener("click", addListAfterClick);
 
-input.addEventListener("keypress", addListAfterKeyPress);
+input.addEventListener("keypress", addListAfterKeypress);
